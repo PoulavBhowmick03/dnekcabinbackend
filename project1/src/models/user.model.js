@@ -12,7 +12,7 @@ const userSchema = new Schema(
             trim: true, 
             index: true
         },
-        email: {
+        email: {  
             type: String,
             required: true,
             unique: true,
@@ -52,5 +52,32 @@ const userSchema = new Schema(
     }
 )
 
+userSchema.pre("save", async function (next){
+    //checking if any parameters changed
+    if(!this.isModified("password")) return next()
+    //If not
+    this.password= bcrypt.hashSync(this.password, 10)
+    next()
+})
+
+userSchema.methods.isPasswordCorrect= async function(password){
+    return await bcrypt.compare(password, this.password)
+}
+
+userSchema.generateAccessToken = function(){
+    jwt.sign(
+        {
+            _id: this._id,
+            email: this.email,
+            username: this.username,
+            fullName: this.fullName,
+
+        }
+    )
+}
+
+userSchema.methods.generateRefreshToken = function(){
+
+}
 
 export const User = mongoose.model("User", userSchema)
