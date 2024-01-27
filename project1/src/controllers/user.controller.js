@@ -1,11 +1,12 @@
-import {asyncHandler} from '../utils/asyncHandler';
+import { asyncHandler } from "../utils/asyncHandler";
+import path from "path"; 
 
-const registerUser = asyncHandler(async (req,res) => {
-    // code to register user
-    res.status(200).json({
-        success: true,
-        message: 'User registered successfully'
-    })
-})
+const registerUser = asyncHandler(async (req, res) => {
+  res.sendfile(
+    path.join(__dirname, "..", "..", "public", "temp", "index.html")
+  );
+  // const {username, email, password} = req.body;
+  // console.log("email :", email);
+});
 
-export {registerUser}
+export { registerUser };
